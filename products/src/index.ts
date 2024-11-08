@@ -8,8 +8,8 @@ async function start() {
     return res.status(200).json({ msg: "Hello from Products Server " });
   });
 
-  app.listen(8006, () => {
-    console.log("Customer Products is listening on http://localhost:8006");
+  app.listen(8007, () => {
+    console.log("Customer Products is listening on http://localhost:8007");
   });
   try {
     app.use;
