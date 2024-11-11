@@ -12,7 +12,8 @@
     "example"
   ],
   "scripts": {
-    "start": "npx nodemon",
+    "start": "NODE_ENV=prod npx nodemon",
+    "dev": "NODE_ENV=dev npx nodemon",
     "build": "tsc",
     "swagger-autogen": "ts-node ./swagger-docs/swagger.ts",
     "netlifyDeploy": "netlify deploy --prod"
