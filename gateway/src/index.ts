@@ -11,9 +11,9 @@ async function start() {
   app.use("/shopping", proxy("http://localhost:8006"));
   app.use("/", proxy("http://localhost:8007")); // * products
 
-  app.listen(8004, () => {
-    console.log("Proxy is listening on http://localhost:8004");
-  });
+  app.listen(27018, () => {
+    console.log("Proxy is listening on http://localhost:27018");
+  }); // * 27017 for expo RN
   try {
     app.use;
   } catch (error) {
