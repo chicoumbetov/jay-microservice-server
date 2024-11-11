@@ -12,7 +12,8 @@
     "example"
   ],
   "scripts": {
-    "start": "npx nodemon",
+    "start": "NODE_ENV=prod npx nodemon",
+    "dev": "NODE_ENV=dev npx nodemon",
     "build": "tsc",
     "swagger-autogen": "ts-node ./swagger-docs/swagger.ts",
     "netlifyDeploy": "netlify deploy --prod"
@@ -24,18 +25,22 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "http": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.1",
-    "types": "^0.1.1"
+    "types": "^0.1.1",
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.9.0",
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "winston": "^3.17.0"
   }
 }
