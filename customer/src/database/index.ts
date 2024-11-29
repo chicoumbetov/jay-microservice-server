@@ -1,7 +1,8 @@
 // database related modules
-module.exports = {
-  databaseConnection: require("./connection"),
-  ProductRepository: require("./repository/product-repository"),
-  CustomerRepository: require("./repository/customer-repository"),
-  ShoppingRepository: require("./repository/shopping-repository"),
-};
+export const databaseConnection = require("./connection");
+
+export const CustomerRepository = require("./repository/customer-repository");
+
+// ! extracted to separate microservice
+// ProductRepository: require("./repository/product-repository"),
+// ShoppingRepository: require("./repository/shopping-repository"),
