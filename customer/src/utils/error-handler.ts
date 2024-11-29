@@ -15,9 +15,11 @@ class ErrorLogger {
     LogErrors.log({
       private: true,
       level: "error",
-      message: `${new Date()}-${JSON.stringify(err)} - ${err.name} - ${
-        err.message
-      } - Stack: ${err.stack || "No stack trace"}`,
+      message: `${new Date()}
+      -${JSON.stringify(err)}
+      - ${err.name}
+      - ${err.message}
+      - Stack: ${err.stack || "No stack trace"}`,
     });
     console.log("==================== End Error Logger ===============");
     // log error with Logger plugins

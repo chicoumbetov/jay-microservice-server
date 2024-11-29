@@ -27,9 +27,16 @@ export const GenerateSignature = async (
   payload: object
 ): Promise<string | Error> => {
   try {
+    console.log(
+      "GenerateSignature APP_SECRET",
+      APP_SECRET,
+      "payload :",
+      payload
+    );
+
     return await jwt.sign(payload, APP_SECRET, { expiresIn: "30d" });
   } catch (error) {
-    console.log(error);
+    console.log("Error in GenerateSignature", error);
     return error instanceof Error
       ? error
       : new Error("Unknown error occurred during signature generation");

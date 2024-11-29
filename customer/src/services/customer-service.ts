@@ -120,7 +120,7 @@ class CustomerService {
     const { street, postalCode, city, country } = userInputs;
 
     try {
-      const addressResult = await this.repository.CreateAddress({
+      const addressResult = await new CustomerRepository().CreateAddress({
         _id,
         street,
         postalCode,
@@ -135,7 +135,9 @@ class CustomerService {
 
   async GetProfile(id: { _id: string }) {
     try {
-      const existingCustomer = await this.repository.FindCustomerById({ id });
+      const existingCustomer = await new CustomerRepository().FindCustomerById({
+        id,
+      });
       return FormateData(existingCustomer);
     } catch (err) {
       throw new APIError("Data Not found", err);
@@ -144,7 +146,9 @@ class CustomerService {
 
   async GetShopingDetails(id: string) {
     try {
-      const existingCustomer = await this.repository.FindCustomerById({ id });
+      const existingCustomer = await new CustomerRepository().FindCustomerById({
+        id,
+      });
 
       if (existingCustomer) {
         return FormateData(existingCustomer);
@@ -157,7 +161,7 @@ class CustomerService {
 
   async GetWishList(customerId: string) {
     try {
-      const wishListItems = await this.repository.Wishlist(customerId);
+      const wishListItems = await new CustomerRepository().Wishlist(customerId);
       return FormateData(wishListItems);
     } catch (err) {
       throw new APIError("Data Not found", err);
@@ -166,7 +170,7 @@ class CustomerService {
 
   async AddToWishlist(customerId: string, product: any) {
     try {
-      const wishlistResult = await this.repository.AddWishlistItem(
+      const wishlistResult = await new CustomerRepository().AddWishlistItem(
         customerId,
         product
       );
@@ -183,7 +187,7 @@ class CustomerService {
     isRemove: boolean
   ) {
     try {
-      const cartResult = await this.repository.AddCartItem(
+      const cartResult = await new CustomerRepository().AddCartItem(
         customerId,
         product,
         qty,
@@ -197,7 +201,7 @@ class CustomerService {
 
   async ManageOrder(customerId: string, order: any) {
     try {
-      const orderResult = await this.repository.AddOrderToProfile(
+      const orderResult = await new CustomerRepository().AddOrderToProfile(
         customerId,
         order
       );
