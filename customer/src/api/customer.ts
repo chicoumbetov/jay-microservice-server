@@ -4,7 +4,8 @@ import { UserAuth } from "./middlewares/auth";
 module.exports = (app: any) => {
   const service = new CustomerService();
 
-  app.post("/customer/signup", async (req: any, res: any, next: any) => {
+  app.post("/signup", async (req: any, res: any, next: any) => {
+    // /customer/signup
     try {
       const { email, password, phone } = req.body;
       const { data } = await service.SignUp({ email, password, phone });
@@ -14,7 +15,8 @@ module.exports = (app: any) => {
     }
   });
 
-  app.post("/customer/login", async (req: any, res: any, next: any) => {
+  app.post("/login", async (req: any, res: any, next: any) => {
+    // /customer/login
     try {
       const { email, password } = req.body;
 
@@ -27,7 +29,7 @@ module.exports = (app: any) => {
   });
 
   app.post(
-    "/customer/address",
+    "/address", // "/customer/address",
     UserAuth,
     async (req: any, res: any, next: any) => {
       try {
@@ -50,7 +52,7 @@ module.exports = (app: any) => {
   );
 
   app.get(
-    "/customer/profile",
+    "/profile", // "/customer/profile",
     UserAuth,
     async (req: any, res: any, next: any) => {
       try {
@@ -64,7 +66,7 @@ module.exports = (app: any) => {
   );
 
   app.get(
-    "/customer/shoping-details",
+    "/shoping-details", // "/customer/shoping-details",
     UserAuth,
     async (req: any, res: any, next: any) => {
       try {
@@ -79,7 +81,7 @@ module.exports = (app: any) => {
   );
 
   app.get(
-    "/customer/wishlist",
+    "/wishlist", // "/customer/wishlist",
     UserAuth,
     async (req: any, res: any, next: any) => {
       try {

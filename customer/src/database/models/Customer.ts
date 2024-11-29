@@ -11,18 +11,35 @@ const CustomerSchema = new Schema(
     address: [{ type: Schema.Types.ObjectId, ref: "address", require: true }],
     cart: [
       {
-        product: { type: Schema.Types.ObjectId, ref: "product", require: true },
+        // for monolithic - product: { type: Schema.Types.ObjectId, ref: "product", require: true },
+        product: {
+          _id: { type: String, require: true },
+          name: { type: String },
+          banner: { type: String },
+          price: { type: Number },
+        },
         unit: { type: Number, require: true },
       },
     ],
     wishlist: [
+      // for monolithic - { type: Schema.Types.ObjectId, ref: "product", require: true, },
       {
-        type: Schema.Types.ObjectId,
-        ref: "product",
-        require: true,
+        _id: { type: String, require: true },
+        name: { type: String },
+        description: { type: String },
+        banner: { type: String },
+        available: { type: Boolean },
+        price: { type: Number },
       },
     ],
-    orders: [{ type: Schema.Types.ObjectId, ref: "order", require: true }],
+    orders: [
+      // for monolithic - { type: Schema.Types.ObjectId, ref: "order", require: true }
+      {
+        _id: { type: String, require: true },
+        amount: { type: String },
+        date: { type: Date, default: Date.now() },
+      },
+    ],
   },
   {
     toJSON: {
@@ -36,4 +53,5 @@ const CustomerSchema = new Schema(
   }
 );
 
-export const CustomerModel = mongoose.model("customer", CustomerSchema);
+module.exports = mongoose.model("customer", CustomerSchema);
+export default CustomerSchema;

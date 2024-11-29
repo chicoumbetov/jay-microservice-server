@@ -32,7 +32,7 @@ class CustomerRepository {
       throw new APIError(
         "API Error",
         STATUS_CODES.INTERNAL_ERROR,
-        "Unable to Create Customer"
+        "Customer Repo or Model error"
       );
     }
   }
@@ -91,11 +91,14 @@ class CustomerRepository {
 
   async FindCustomerById({ id }: { id: string }) {
     try {
-      const existingCustomer = await CustomerModel.findById(id)
-        .populate("address")
+      const existingCustomer = await CustomerModel.findById(id).populate(
+        "address"
+      );
+      /*
         .populate("wishlist")
         .populate("orders")
         .populate("cart.product");
+        */
       return existingCustomer;
     } catch (err) {
       throw new APIError(
@@ -122,7 +125,28 @@ class CustomerRepository {
     }
   }
 
-  async AddWishlistItem(customerId: string, product: any) {
+  async AddWishlistItem(
+    customerId: string,
+    {
+      _id,
+      name,
+      description,
+      price,
+      available,
+      banner,
+    }: {
+      _id: string;
+      name: string;
+      description: string;
+      price: number;
+      available: boolean;
+      banner: string;
+    }
+  ) {
+    // product: any) {
+
+    const product = { _id, name, description, price, available, banner };
+
     try {
       const profile = await CustomerModel.findById(customerId).populate(
         "wishlist"
@@ -165,18 +189,30 @@ class CustomerRepository {
 
   async AddCartItem(
     customerId: string,
-    product: any,
+    // * product:
+    {
+      _id,
+      name,
+      price,
+      banner,
+    }: {
+      _id: string;
+      name: string;
+      price: number;
+      banner: string;
+    },
     qty: number,
     isRemove: boolean
   ) {
     try {
       const profile = await CustomerModel.findById(customerId).populate(
-        "cart.product"
+        // "cart.product"
+        "cart"
       );
 
       if (profile) {
         const cartItem = {
-          product,
+          product: { _id, name, price, banner },
           unit: qty,
         };
 
@@ -185,7 +221,7 @@ class CustomerRepository {
         if (cartItems.length > 0) {
           let isExist = false;
           cartItems.map((item: any) => {
-            if (item.product._id.toString() === product._id.toString()) {
+            if (item.product._id.toString() === _id.toString()) {
               if (isRemove) {
                 cartItems.splice(cartItems.indexOf(item), 1);
               } else {
@@ -206,7 +242,7 @@ class CustomerRepository {
 
         const cartSaveResult = await profile.save();
 
-        return cartSaveResult.cart;
+        return cartSaveResult; // cartSaveResult.cart;
       }
 
       throw new Error("Unable to add to cart!");
@@ -219,7 +255,10 @@ class CustomerRepository {
     }
   }
 
-  async AddOrderToProfile(customerId: string, order: any) {
+  async AddOrderToProfile(
+    customerId: string,
+    order: { _id: string; amount: string; date: Date }
+  ) {
     try {
       const profile = await CustomerModel.findById(customerId);
 
@@ -248,3 +287,5 @@ class CustomerRepository {
 }
 
 module.exports = CustomerRepository;
+
+export default CustomerRepository;
