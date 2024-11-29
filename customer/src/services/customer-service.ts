@@ -1,4 +1,5 @@
-const { CustomerRepository } = require("../database");
+const CustomerRepository = require("../database/repository/customer-repository");
+
 const {
   FormateData,
   GeneratePassword,
@@ -6,20 +7,28 @@ const {
   GenerateSignature,
   ValidatePassword,
 } = require("../utils");
-const { APIError, BadRequestError } = require("../utils/app-errors");
+const {
+  APIError,
+  BadRequestError,
+  STATUS_CODES,
+} = require("../utils/app-errors");
 
 // All Business logic will be here
 class CustomerService {
   private repository: any;
+  /*
   constructor() {
     this.repository = new CustomerRepository();
   }
+  */
 
   async SignIn(userInputs: any) {
     const { email, password } = userInputs;
 
     try {
-      const existingCustomer = await this.repository.FindCustomer({ email });
+      const existingCustomer = await new CustomerRepository().FindCustomer({
+        email,
+      });
 
       if (existingCustomer) {
         const validPassword = await ValidatePassword(
@@ -39,38 +48,75 @@ class CustomerService {
 
       return FormateData(null);
     } catch (err) {
-      throw new APIError("Data Not found", err);
+      throw new APIError(
+        "Data Not found",
+        STATUS_CODES.INTERNAL_ERROR,
+        "Unable to find customer data",
+        true
+      ); // , err);
     }
   }
 
   async SignUp(userInputs: any) {
     const { email, password, phone } = userInputs;
-
+    try {
+      console.log(
+        "Testing CustomerRepository access:",
+        await new CustomerRepository().FindCustomer({ email })
+      );
+    } catch (error) {
+      console.error("Repository test failed:", error);
+    }
     try {
       // create salt
       let salt = await GenerateSalt();
 
       let userPassword = await GeneratePassword(password, salt);
 
-      const existingCustomer = await this.repository.CreateCustomer({
+      const existingCustomer = await new CustomerRepository().CreateCustomer({
         email,
         password: userPassword,
         phone,
         salt,
       });
+      console.log("existing customer :", existingCustomer);
 
-      const token = await GenerateSignature({
-        email: email,
-        _id: existingCustomer._id,
-      });
+      if (existingCustomer) {
+        const token = await GenerateSignature({
+          email: email,
+          _id: existingCustomer._id,
+        });
 
-      return FormateData({ id: existingCustomer._id, token });
-    } catch (err) {
-      throw new APIError("Data Not found", err);
+        return FormateData({ id: existingCustomer._id, token });
+      }
+    } catch (err: any) {
+      // ! APIError attend un entier pour statusCode
+      console.log(
+        "Sign up error :",
+        err,
+        "status code is err",
+        err.statusCode,
+        err.isOperational
+      );
+
+      throw new APIError(
+        "SignUp Error",
+        STATUS_CODES.INTERNAL_ERROR,
+        "Unable to create customer",
+        true
+      ); // , err);
     }
   }
 
-  async AddNewAddress(_id: string, userInputs: any) {
+  async AddNewAddress(
+    _id: string,
+    userInputs: {
+      street: string;
+      postalCode: string;
+      city: string;
+      country: string;
+    }
+  ) {
     const { street, postalCode, city, country } = userInputs;
 
     try {
@@ -161,6 +207,7 @@ class CustomerService {
     }
   }
 
+  // * Take care of communication with other services
   async SubscribeEvents(payload: any) {
     const { event, data } = payload;
 
@@ -179,6 +226,10 @@ class CustomerService {
         break;
       case "CREATE_ORDER":
         this.ManageOrder(userId, order);
+        break;
+      case "TEST":
+        console.log("WORKING ... Subscriber");
+
         break;
       default:
         break;
