@@ -27,13 +27,6 @@ export const GenerateSignature = async (
   payload: object
 ): Promise<string | Error> => {
   try {
-    console.log(
-      "GenerateSignature APP_SECRET",
-      APP_SECRET,
-      "payload :",
-      payload
-    );
-
     return await jwt.sign(payload, APP_SECRET, { expiresIn: "30d" });
   } catch (error) {
     console.log("Error in GenerateSignature", error);
@@ -46,7 +39,6 @@ export const GenerateSignature = async (
 export const ValidateSignature = async (req: any) => {
   try {
     const signature = req.get("Authorization");
-    console.log(signature);
     const payload = await jwt.verify(signature.split(" ")[1], APP_SECRET);
     req.user = payload;
     return true;
