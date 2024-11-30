@@ -9,7 +9,7 @@ module.exports = (app: any) => {
 
   app.post("/product/create", async (req: any, res: any, next: any) => {
     try {
-      const { name, desc, type, unit, price, available, suplier, banner } =
+      const { name, desc, type, unit, price, available, supplier, banner } =
         req.body;
       // validation
       const { data } = await service.CreateProduct({
@@ -19,7 +19,7 @@ module.exports = (app: any) => {
         unit,
         price,
         available,
-        suplier,
+        supplier,
         banner,
       });
       return res.json(data);

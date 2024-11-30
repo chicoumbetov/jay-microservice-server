@@ -10,7 +10,7 @@ const ProductSchema = new Schema({
   unit: Number,
   price: Number,
   available: Boolean,
-  suplier: String,
+  supplier: String,
 });
 
 export const ProductModel = mongoose.model("product", ProductSchema);

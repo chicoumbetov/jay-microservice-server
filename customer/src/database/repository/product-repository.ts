@@ -10,7 +10,7 @@ interface ProductInput {
   unit: number;
   price: number;
   available: boolean;
-  suplier: string;
+  supplier: string;
   banner: string;
 }
 
@@ -23,7 +23,7 @@ class ProductRepository {
     unit,
     price,
     available,
-    suplier,
+    supplier,
     banner,
   }: ProductInput) {
     try {
@@ -34,7 +34,7 @@ class ProductRepository {
         unit,
         price,
         available,
-        suplier,
+        supplier,
         banner,
       });
 
