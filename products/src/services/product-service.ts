@@ -15,7 +15,7 @@ class ProductService {
       const productResult = await this.repository.CreateProduct(productInputs);
       return FormateData(productResult);
     } catch (err) {
-      throw new APIError("Data Not found");
+      throw new APIError("Error in CreateProduct");
     }
   }
 
@@ -34,7 +34,7 @@ class ProductService {
         categories: Object.keys(categories),
       });
     } catch (err) {
-      throw new APIError("Data Not found");
+      throw new APIError("Error in GetProducts");
     }
   }
 
@@ -43,7 +43,7 @@ class ProductService {
       const product = await this.repository.FindById(productId);
       return FormateData(product);
     } catch (err) {
-      throw new APIError("Data Not found");
+      throw new APIError("Error in GetProductDescription");
     }
   }
 
@@ -52,7 +52,7 @@ class ProductService {
       const products = await this.repository.FindByCategory(category);
       return FormateData(products);
     } catch (err) {
-      throw new APIError("Data Not found");
+      throw new APIError("Error in GetProductsByCategory");
     }
   }
 
@@ -61,7 +61,7 @@ class ProductService {
       const products = await this.repository.FindSelectedProducts(selectedIds);
       return FormateData(products);
     } catch (err) {
-      throw new APIError("Data Not found");
+      throw new APIError("Error in GetSelectedProducts");
     }
   }
 
