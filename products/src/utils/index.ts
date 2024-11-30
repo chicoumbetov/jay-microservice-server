@@ -1,3 +1,6 @@
+import axios from "axios";
+const { GATEWAY_PORT } = require("./config");
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -61,5 +64,26 @@ export const FormateData = (data: any) => {
     return { data };
   } else {
     throw new Error("Data Not found!");
+  }
+};
+
+export const PublisherCustomerEvent = async (payload: any) => {
+  try {
+    axios.post(`http://localhost:${GATEWAY_PORT}/customer/app-events`, {
+      payload,
+    });
+  } catch {
+    throw new Error("PublisherCustomerEvent error !");
+  }
+};
+
+export const PublisherShoppingEvent = async (payload: any) => {
+  try {
+    // ! refactor process.env.GATEWAY_PORT using
+    axios.post(`http://localhost:${GATEWAY_PORT}/shopping/app-events`, {
+      payload,
+    });
+  } catch {
+    throw new Error("PublisherShoppingEvent error !");
   }
 };
