@@ -1,15 +1,14 @@
+import { UserAuth } from "./middlewares/auth";
 const { ProductService } = require("../services/product-service");
 // * Déconnecter: import { CustomerService } from "../services/customer-service";
 // * Replace by Publisher Events
 const { PublishCustomerEvent, PublishShoppingEvent } = require("../utils");
 
-const UserAuth = require("./middlewares/auth");
-
 module.exports = (app: any) => {
   const service = new ProductService();
   // * Déconnecter: const customerService = new CustomerService();
 
-  app.post("/product/create", async (req: any, res: any, next: any) => {
+  app.post("/create", async (req: any, res: any, next: any) => {
     try {
       const { name, desc, type, unit, price, available, supplier, banner } =
         req.body;
