@@ -8,7 +8,7 @@ module.exports = (app: any) => {
   const service = new ProductService();
   // * Déconnecter: const customerService = new CustomerService();
 
-  app.post("/create", async (req: any, res: any, next: any) => {
+  app.post("/product/create", async (req: any, res: any, next: any) => {
     try {
       const { name, desc, type, unit, price, available, supplier, banner } =
         req.body;
