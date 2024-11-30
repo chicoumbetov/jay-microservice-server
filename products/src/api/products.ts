@@ -1,11 +1,12 @@
-import { CustomerService } from "../services/customer-service";
-import { ProductService } from "../services/product-service";
-
-const UserAuth = require("./middlewares/auth");
+import { UserAuth } from "./middlewares/auth";
+const { ProductService } = require("../services/product-service");
+// * Déconnecter: import { CustomerService } from "../services/customer-service";
+// * Replace by Publisher Events
+const { PublishCustomerEvent, PublishShoppingEvent } = require("../utils");
 
 module.exports = (app: any) => {
   const service = new ProductService();
-  const customerService = new CustomerService();
+  // * Déconnecter: const customerService = new CustomerService();
 
   app.post("/product/create", async (req: any, res: any, next: any) => {
     try {
@@ -62,11 +63,26 @@ module.exports = (app: any) => {
 
   app.put("/wishlist", UserAuth, async (req: any, res: any, next: any) => {
     const { _id } = req.user;
-
     try {
+      //* Transition from Monolith to MS */
+      // * Get Payload & Send to Customer MS
+      const { data } = await service.GetProductPayload(
+        _id,
+        {
+          productId: req.body._id,
+        },
+        "ADD_TO_WISHLIST"
+      );
+      // * should match to SubscribeEvents of
+      // * customer/src/services/customer-service.ts
+      // * in order to call AddToWishlist funciton
+      PublishCustomerEvent(data);
+      /* // * Replace by code above - 
       const product = await service.GetProductById(req.body._id);
       const wishList = await customerService.AddToWishlist(_id, product);
       return res.status(200).json(wishList);
+      */
+      return res.status(200).json(data.data.product);
     } catch (err) {}
   });
 
@@ -78,9 +94,15 @@ module.exports = (app: any) => {
       const productId = req.params.id;
 
       try {
-        const product = await service.GetProductById(productId);
-        const wishlist = await customerService.AddToWishlist(_id, product);
-        return res.status(200).json(wishlist);
+        const { data } = await service.GetProductPayload(
+          _id,
+          {
+            productId,
+          },
+          "REMOVE_FROM_WISHLIST"
+        );
+        PublishCustomerEvent(data);
+        return res.status(200).json(data.data.product);
       } catch (err) {
         next(err);
       }
@@ -88,18 +110,35 @@ module.exports = (app: any) => {
   );
 
   app.put("/cart", UserAuth, async (req: any, res: any, next: any) => {
-    const { _id, qty } = req.body;
+    const { _id } = req.user;
+    // const { _id, qty } = req.body;
 
     try {
-      const product = await service.GetProductById(_id);
+      const { data } = await service.GetProductPayload(
+        _id,
+        {
+          productId: req.body._id,
+          qty: req.body.qty,
+        },
+        "ADD_TO_CART"
+      );
 
+      PublishCustomerEvent(data);
+      PublishShoppingEvent(data);
+      const result = {
+        product: data.data.product,
+        unit: data.data.qty,
+      };
+      /* // * Monolith to MS
+      const product = await service.GetProductById(_id);
       const result = await customerService.ManageCart(
         req.user._id,
         product,
         qty,
         false
       );
-
+      
+      */
       return res.status(200).json(result);
     } catch (err) {
       next(err);
@@ -108,17 +147,28 @@ module.exports = (app: any) => {
 
   app.delete("/cart/:id", UserAuth, async (req: any, res: any, next: any) => {
     const { _id } = req.user;
+    const productId = req.params.id;
 
     try {
-      const product = await service.GetProductById(req.params.id);
-      const result = await customerService.ManageCart(_id, product, 0, true);
+      const { data } = await service.GetProductPayload(
+        _id,
+        { productId },
+        "REMOVE_FROM_CART"
+      );
+
+      PublishCustomerEvent(data);
+      PublishShoppingEvent(data);
+      const result = {
+        product: data.data.product,
+        unit: data.data.qty,
+      };
       return res.status(200).json(result);
     } catch (err) {
       next(err);
     }
   });
 
-  //get Top products and category
+  // * get Top products and category
   app.get("/", async (req: any, res: any, next: any) => {
     //check validation
     try {

@@ -63,7 +63,16 @@ class ProductRepository {
 
   async FindById(id: string) {
     try {
-      return await ProductModel.findById(id);
+      const found_product = await ProductModel.findById(id);
+      if (!found_product) {
+        throw new APIError(
+          "Product Not Found",
+          STATUS_CODES.NOT_FOUND,
+          `Product with ID ${id} does not exist`
+        );
+      }
+
+      return found_product;
     } catch (err) {
       throw new APIError(
         "API Error",

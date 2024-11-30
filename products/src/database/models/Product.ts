@@ -13,4 +13,4 @@ const ProductSchema = new Schema({
   supplier: String,
 });
 
-export const ProductModel = mongoose.model("product", ProductSchema);
+module.exports = mongoose.model("product", ProductSchema);

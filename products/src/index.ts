@@ -1,20 +1,20 @@
-import express from "express";
-import { app } from "./socket/server";
+const { app } = require("./socket/server");
+const { PORT } = require("./config");
+const { databaseConnection } = require("./database");
+const expressApp = require("./express-app");
 
 async function start() {
-  app.use(express.json());
+  await databaseConnection();
 
-  app.use("/", (req, res, next) => {
-    return res.status(200).json({ msg: "Hello from Products Server " });
-  });
+  await expressApp(app);
 
-  app.listen(8007, () => {
-    console.log("Customer Products is listening on http://localhost:8007");
+  app.listen(PORT, () => {
+    console.log(`Products is listening on http://localhost:${PORT}`);
   });
   try {
     app.use;
   } catch (error) {
-    console.log("server error :", JSON.stringify(error));
+    console.log("Products server error :", JSON.stringify(error));
   }
 }
 
