@@ -15,7 +15,13 @@ class ErrorLogger {
     LogErrors.log({
       private: true,
       level: "error",
-      message: `${new Date()}-${JSON.stringify(err)}`,
+      message: `
+      - Name: ${err.name}
+      - Message ${err.message}
+      - Stack: ${err.stack || "No stack trace"}
+      - Date: ${new Date()}
+      - Whole error: ${JSON.stringify(err)}
+      `,
     });
     console.log("==================== End Error Logger ===============");
     // log error with Logger plugins
@@ -52,6 +58,11 @@ const ErrorHandler = async (
     }
   });
 
+  process.on("unhandledRejection", (reason, promise) => {
+    console.log("Unhandled Rejection at:", promise, "reason:", reason);
+    errorLogger.logError(reason);
+  });
+
   // console.log(err.description, '-------> DESCRIPTION')
   // console.log(err.message, '-------> MESSAGE')
   // console.log(err.name, '-------> NAME')
@@ -62,11 +73,15 @@ const ErrorHandler = async (
         const errorDescription = err.errorStack;
         return res.status(err.statusCode).json({ message: errorDescription });
       }
-      return res.status(err.statusCode).json({ message: err.message });
+      const statusCode = Number.isInteger(err.statusCode)
+        ? err.statusCode
+        : 500;
+      return res.status(statusCode).json({ message: err.message }); // err.statusCode
     } else {
       //process exit // terriablly wrong with flow need restart
     }
-    return res.status(err.statusCode).json({ message: err.message });
+    const statusCode = Number.isInteger(err.statusCode) ? err.statusCode : 500;
+    return res.status(statusCode).json({ message: err.message }); // err.statusCode
   }
   next();
 };
