@@ -1,10 +1,8 @@
-import axios from "axios";
-const { GATEWAY_PORT } = require("./config");
-
+const axios = require("axios");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const { APP_SECRET } = require("../config");
+const { APP_SECRET, GATEWAY_PORT } = require("../config");
 
 //Utility functions
 export const GenerateSalt = async (): Promise<string> => {
@@ -67,7 +65,7 @@ export const FormateData = (data: any) => {
   }
 };
 
-export const PublisherCustomerEvent = async (payload: any) => {
+export const PublishCustomerEvent = async (payload: any) => {
   try {
     axios.post(`http://localhost:${GATEWAY_PORT}/customer/app-events`, {
       payload,
@@ -77,7 +75,7 @@ export const PublisherCustomerEvent = async (payload: any) => {
   }
 };
 
-export const PublisherShoppingEvent = async (payload: any) => {
+export const PublishShoppingEvent = async (payload: any) => {
   try {
     // ! refactor process.env.GATEWAY_PORT using
     axios.post(`http://localhost:${GATEWAY_PORT}/shopping/app-events`, {
