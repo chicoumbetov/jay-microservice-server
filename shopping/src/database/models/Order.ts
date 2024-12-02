@@ -8,7 +8,7 @@ const OrderSchema = new Schema(
     customerId: String,
     amount: Number,
     status: String,
-    txnId: String,
+    transactionId: String,
     items: [
       // * replace object same as in CartModel
       {

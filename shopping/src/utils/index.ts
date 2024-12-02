@@ -60,6 +60,7 @@ export const FormateData = (data: any) => {
 
 export const PublishCustomerEvent = async (payload: any) => {
   try {
+    console.log("PublishCustomerEvent called", payload);
     axios.post(`http://localhost:${GATEWAY_PORT}/customer/app-events`, {
       payload,
     });

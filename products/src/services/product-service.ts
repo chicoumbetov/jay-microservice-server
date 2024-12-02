@@ -89,7 +89,9 @@ class ProductService {
         return FormateData(payload);
       }
     } catch (err) {
-      throw new APIError("Not product available. GetProductPayload func error");
+      throw new APIError(
+        "No product is available. GetProductPayload func error"
+      );
     }
   }
 }
