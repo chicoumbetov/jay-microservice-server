@@ -1,0 +1,5 @@
+{"level":"error","message":"Sat Nov 30 2024 20:59:20 GMT+0100 (Central European Standard Time)-{}","private":true}
+{"level":"error","message":"Sat Nov 30 2024 22:54:08 GMT+0100 (Central European Standard Time)-{}","private":true}
+{"level":"error","message":"Sat Nov 30 2024 23:02:06 GMT+0100 (Central European Standard Time)-{\"statusCode\":500,\"isOperational\":true,\"errorStack\":null,\"logError\":null,\"name\":\"Error in getCart of shopping service\"}","private":true}
+{"level":"error","message":"Sat Nov 30 2024 23:13:32 GMT+0100 (Central European Standard Time)-{\"statusCode\":404,\"isOperational\":true,\"errorStack\":null,\"logError\":null,\"name\":\"Data Not Found\"}","private":true}
+{"level":"error","message":"Sat Nov 30 2024 23:14:06 GMT+0100 (Central European Standard Time)-{\"statusCode\":404,\"isOperational\":true,\"errorStack\":null,\"logError\":null,\"name\":\"Data Not Found\"}","private":true}

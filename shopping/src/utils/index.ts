@@ -1,7 +1,9 @@
+import axios from "axios";
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const { APP_SECRET } = require("../config");
+const { APP_SECRET, GATEWAY_PORT } = require("../config");
 
 //Utility functions
 export const GenerateSalt = async (): Promise<string> => {
@@ -39,7 +41,6 @@ export const GenerateSignature = async (
 export const ValidateSignature = async (req: any) => {
   try {
     const signature = req.get("Authorization");
-    console.log(signature);
     const payload = await jwt.verify(signature.split(" ")[1], APP_SECRET);
     req.user = payload;
     return true;
@@ -54,5 +55,16 @@ export const FormateData = (data: any) => {
     return { data };
   } else {
     throw new Error("Data Not found!");
+  }
+};
+
+export const PublishCustomerEvent = async (payload: any) => {
+  try {
+    console.log("PublishCustomerEvent called", payload);
+    axios.post(`http://localhost:${GATEWAY_PORT}/customer/app-events`, {
+      payload,
+    });
+  } catch {
+    throw new Error("PublisherCustomerEvent from shopping error !");
   }
 };
