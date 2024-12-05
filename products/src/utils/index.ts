@@ -57,6 +57,7 @@ export const FormateData = (data: any) => {
   }
 };
 
+// ! will be replaced by message broker
 export const PublishCustomerEvent = async (payload: any) => {
   try {
     axios.post(`http://localhost:${GATEWAY_PORT}/customer/app-events`, {
@@ -77,3 +78,12 @@ export const PublishShoppingEvent = async (payload: any) => {
     throw new Error("PublisherShoppingEvent error !");
   }
 };
+
+//*-------------------------------- Message Broker -------------------------------- */
+// TODO: create a channel
+module.exports.CreateChannel = async () => {};
+
+// TODO: publish messages
+module.exports.PublishMessage = async () => {};
+
+// TODO: subscribe messages
