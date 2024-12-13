@@ -1,7 +1,7 @@
 import { CustomerService } from "../services/customer-service";
 import { UserAuth } from "./middlewares/auth";
 
-module.exports = (app: any) => {
+module.exports = (app: any, channel: any) => {
   const service = new CustomerService();
 
   app.post("/signup", async (req: any, res: any, next: any) => {
