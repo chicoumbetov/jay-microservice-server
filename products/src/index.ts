@@ -3,10 +3,14 @@ const { PORT } = require("./config");
 const { databaseConnection } = require("./database");
 const expressApp = require("./express-app");
 
+const { CreateChannel } = require("./utils/index");
+
 async function start() {
   await databaseConnection();
 
-  await expressApp(app);
+  const channel = await CreateChannel();
+
+  await expressApp(app, channel);
 
   app.listen(PORT, () => {
     console.log(`Products is listening on http://localhost:${PORT}`);
