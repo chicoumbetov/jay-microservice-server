@@ -64,7 +64,6 @@ export const FormateData = (data: any) => {
 };
 
 //*-------------------------------- Message Broker -------------------------------- */
-// TODO: create a channel
 module.exports.CreateChannel = async () => {
   try {
     const connection = await amqplib.connect(MESSAGE_BROKER_URL);
@@ -84,7 +83,6 @@ module.exports.CreateChannel = async () => {
   }
 };
 
-// TODO: publish messages
 module.exports.PublishMessage = async (
   channel: any,
   binding_key: string,
@@ -99,7 +97,6 @@ module.exports.PublishMessage = async (
   }
 };
 
-// TODO: subscribe messages
 module.exports.SubscribeMessage = async (
   channel: any,
   service: any,
@@ -120,6 +117,7 @@ module.exports.SubscribeMessage = async (
 };
 
 // * ---------- REPLACED by message broker above  ---------- * //
+/*
 export const PublishCustomerEvent = async (payload: any) => {
   try {
     axios.post(`http://localhost:${GATEWAY_PORT}/customer/app-events`, {
@@ -132,7 +130,6 @@ export const PublishCustomerEvent = async (payload: any) => {
 
 export const PublishShoppingEvent = async (payload: any) => {
   try {
-    // ! refactor process.env.GATEWAY_PORT using
     axios.post(`http://localhost:${GATEWAY_PORT}/shopping/app-events`, {
       payload,
     });
@@ -140,3 +137,4 @@ export const PublishShoppingEvent = async (payload: any) => {
     throw new Error("PublisherShoppingEvent error !");
   }
 };
+*/
