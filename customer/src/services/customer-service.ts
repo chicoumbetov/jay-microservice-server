@@ -1,3 +1,5 @@
+import { EventPayload } from "../types/api";
+
 const CustomerRepository = require("../database/repository/customer-repository");
 
 const {
@@ -212,7 +214,7 @@ class CustomerService {
   }
 
   // * Take care of communication with other services
-  async SubscribeEvents(payload: any) {
+  async SubscribeEvents(payload: EventPayload) {
     const { event, data } = payload;
 
     const { userId, product, order, qty } = data;
