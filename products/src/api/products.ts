@@ -114,7 +114,12 @@ module.exports = (app: any, channel: any) => {
 
         // * PublishCustomerEvent(data);
         // * Replace by PublishMessage of MESSAGE BROKER:
-        PublishMessage(channel, CUSTOMER_BINDING_KEY, JSON.stringify(data));
+        PublishMessage(
+          channel,
+          CUSTOMER_BINDING_KEY,
+          JSON.stringify(data),
+          "Customer"
+        );
 
         return res.status(200).json(data.data.product);
       } catch (err) {
@@ -140,8 +145,18 @@ module.exports = (app: any, channel: any) => {
       // PublishCustomerEvent(data);
       // PublishShoppingEvent(data);
       // * Replace by PublishMessage of MESSAGE BROKER:
-      PublishMessage(channel, CUSTOMER_BINDING_KEY, JSON.stringify(data));
-      PublishMessage(channel, SHOPPING_BINDING_KEY, JSON.stringify(data));
+      PublishMessage(
+        channel,
+        CUSTOMER_BINDING_KEY,
+        JSON.stringify(data),
+        "Customer"
+      );
+      PublishMessage(
+        channel,
+        SHOPPING_BINDING_KEY,
+        JSON.stringify(data),
+        "Shopping"
+      );
       const result = {
         product: data.data.product,
         unit: data.data.qty,

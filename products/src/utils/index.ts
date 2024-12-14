@@ -86,14 +86,18 @@ module.exports.CreateChannel = async () => {
 module.exports.PublishMessage = async (
   channel: any,
   binding_key: string,
-  message: string
+  message: string,
+  destination?: string // * Just info to put in console log
 ) => {
   try {
     await channel.publish(EXCHANGE_NAME, binding_key, Buffer.from(message));
-    console.log("----Message has been sent from Products MS----", message);
+    console.log(
+      `----Message has been sent from Products MS to ${destination} Service----`,
+      message
+    );
   } catch (error) {
     // throw new Error
-    console.log(`PublishMessage error of Message Broker  ${error}`);
+    console.log(`PublishMessage error of Message Broker ${error}`);
   }
 };
 
