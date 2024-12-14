@@ -1,3 +1,5 @@
+import { Channel } from "amqplib";
+
 const axios = require("axios");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -84,7 +86,7 @@ module.exports.CreateChannel = async () => {
 };
 
 module.exports.PublishMessage = async (
-  channel: any,
+  channel: Channel,
   binding_key: string,
   message: string,
   destination?: string // * Just info to put in console log
@@ -102,12 +104,12 @@ module.exports.PublishMessage = async (
 };
 
 module.exports.SubscribeMessage = async (
-  channel: any,
+  channel: Channel,
   service: any,
   binding_key: string
 ) => {
   try {
-    const appQueue = await channel.asserQueue("QUEUE_NAME");
+    const appQueue = await channel.assertQueue("QUEUE_NAME");
     channel.bindQueue(appQueue.queue, EXCHANGE_NAME, binding_key);
     channel.consume(appQueue.queue, (data: any) => {
       console.log("SubscribeMessage received data");

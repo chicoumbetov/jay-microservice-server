@@ -1,3 +1,4 @@
+import { Channel } from "amqplib";
 import { ShoppingService } from "../services/shopping-service";
 // const UserService = require("../services/customer-service");
 import { UserAuth } from "./middlewares/auth";
@@ -7,7 +8,7 @@ import { UserAuth } from "./middlewares/auth";
 const { SubscribeMessage, PublishMessage } = require("../utils/message-broker");
 const { CUSTOMER_BINDING_KEY } = require("../config");
 
-module.exports = (app: any, channel: any) => {
+module.exports = (app: any, channel: Channel) => {
   const service: {
     PlaceOrder: ({
       _id,

@@ -1,3 +1,5 @@
+import { Channel } from "amqplib";
+
 const amqplib = require("amqplib");
 const {
   MESSAGE_BROKER_URL,
@@ -25,7 +27,7 @@ module.exports.CreateChannel = async () => {
   }
 };
 
-module.exports.SubscribeMessage = async (channel: any, service: any) => {
+module.exports.SubscribeMessage = async (channel: Channel, service: any) => {
   try {
     const appQueue = await channel?.assertQueue(QUEUE_NAME);
     channel?.bindQueue(appQueue.queue, EXCHANGE_NAME, CUSTOMER_BINDING_KEY);

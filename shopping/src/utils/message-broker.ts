@@ -1,3 +1,5 @@
+import { Channel } from "amqplib";
+
 const amqplib = require("amqplib");
 
 const {
@@ -28,7 +30,7 @@ module.exports.CreateChannel = async () => {
 };
 
 module.exports.PublishMessage = async (
-  channel: any,
+  channel: Channel,
   binding_key: string,
   message: string
 ) => {
@@ -41,7 +43,7 @@ module.exports.PublishMessage = async (
   }
 };
 
-module.exports.SubscribeMessage = async (channel: any, service: any) => {
+module.exports.SubscribeMessage = async (channel: Channel, service: any) => {
   try {
     if (channel) {
       const appQueue = await channel?.assertQueue(QUEUE_NAME);

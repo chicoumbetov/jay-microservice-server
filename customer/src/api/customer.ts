@@ -1,9 +1,10 @@
+import { Channel } from "amqplib";
 import { CustomerService } from "../services/customer-service";
 import { UserAuth } from "./middlewares/auth";
 
 const { SubscribeMessage } = require("../utils/message-broker");
 
-module.exports = (app: any, channel: any) => {
+module.exports = (app: any, channel: Channel) => {
   const service = new CustomerService();
   SubscribeMessage(channel, service);
 

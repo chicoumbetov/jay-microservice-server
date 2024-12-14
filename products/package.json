@@ -19,7 +19,7 @@
     "netlifyDeploy": "netlify deploy --prod"
   },
   "engines": {
-    "node": "22.x"
+    "node": "23.x"
   },
   "author": "shoco_umbeto",
   "license": "ISC",
@@ -38,6 +38,7 @@
     "uuid": "^11.0.3"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.6",
     "@types/express": "^5.0.0",
     "@types/node": "^22.9.0",
     "nodemon": "^3.1.7",

@@ -1,3 +1,4 @@
+import { Channel } from "amqplib";
 import { UserAuth } from "./middlewares/auth";
 const { ProductService } = require("../services/product-service");
 // * Déconnecter: import { CustomerService } from "../services/customer-service";
@@ -8,7 +9,7 @@ const { ProductService } = require("../services/product-service");
 const { PublishMessage } = require("../utils");
 const { SHOPPING_BINDING_KEY, CUSTOMER_BINDING_KEY } = require("../config");
 
-module.exports = (app: any, channel: any) => {
+module.exports = (app: any, channel: Channel) => {
   const service = new ProductService();
   // * Déconnecter: const customerService = new CustomerService();
 
