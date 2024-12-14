@@ -70,7 +70,10 @@ module.exports.CreateChannel = async () => {
     const connection = await amqplib.connect(MESSAGE_BROKER_URL);
 
     const channel = await connection.createChannel();
-    console.log("channel :", channel);
+
+    if (channel) {
+      console.log("------Products Message Broker Channel Created------");
+    }
 
     // * Exchange Distributor
     await channel.assertExchange(EXCHANGE_NAME, "direct", false);
@@ -89,6 +92,7 @@ module.exports.PublishMessage = async (
 ) => {
   try {
     await channel.publish(EXCHANGE_NAME, binding_key, Buffer.from(message));
+    console.log("----Message has been sent from Products MS----", message);
   } catch (error) {
     // throw new Error
     console.log(`PublishMessage error of Message Broker  ${error}`);
