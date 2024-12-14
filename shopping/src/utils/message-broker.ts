@@ -1,4 +1,4 @@
-const { amqplib } = require("amqplib");
+const amqplib = require("amqplib");
 
 const {
   MESSAGE_BROKER_URL,
@@ -43,17 +43,20 @@ module.exports.PublishMessage = async (
 
 module.exports.SubscribeMessage = async (channel: any, service: any) => {
   try {
-    const appQueue = await channel.asserQueue(QUEUE_NAME);
-    channel.bindQueue(appQueue.queue, EXCHANGE_NAME, SHOPPING_BINDING_KEY);
-    channel.consume(appQueue.queue, (data: any) => {
-      console.log("Shopping MS SubscribeMessage Received Data");
-      console.log("data.content:", data.content.toString());
+    if (channel) {
+      const appQueue = await channel?.assertQueue(QUEUE_NAME);
+      channel?.bindQueue(appQueue.queue, EXCHANGE_NAME, SHOPPING_BINDING_KEY);
+      channel?.consume(appQueue.queue, (data: any) => {
+        console.log("Shopping MS SubscribeMessage Received Data");
+        console.log("data.content:", data.content.toString());
 
-      channel.ack(data);
-    });
+        channel?.ack(data);
+      });
+    } else {
+      console.log("Shopping MS SubscribeMessage channel is undefined");
+    }
   } catch (error) {
-    throw new Error(
-      `SubscribeMessage error of Shopping Message Broker ${error}`
-    );
+    // throw new Error
+    console.log(`SubscribeMessage error of Shopping Message Broker ${error}`);
   }
 };
