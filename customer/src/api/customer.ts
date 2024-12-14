@@ -1,8 +1,11 @@
 import { CustomerService } from "../services/customer-service";
 import { UserAuth } from "./middlewares/auth";
 
+const { SubscribeMessage } = require("../utils/message-broker");
+
 module.exports = (app: any, channel: any) => {
   const service = new CustomerService();
+  SubscribeMessage(channel, service);
 
   app.post("/signup", async (req: any, res: any, next: any) => {
     // /customer/signup
