@@ -1,10 +1,13 @@
-import { PublishCustomerEvent } from "../utils";
-
 import { ShoppingService } from "../services/shopping-service";
 // const UserService = require("../services/customer-service");
 import { UserAuth } from "./middlewares/auth";
 
-module.exports = (app: any) => {
+// *import { PublishCustomerEvent } from "../utils";
+// *Replaced by MessageBroker by passing channel in parameters
+const { SubscribeMessage, PublishMessage } = require("../utils/message-broker");
+const { CUSTOMER_BINDING_KEY } = require("../config");
+
+module.exports = (app: any, channel: any) => {
   const service: {
     PlaceOrder: ({
       _id,
@@ -20,6 +23,8 @@ module.exports = (app: any) => {
   // * removed in order to transite from Monolith to MS
   // * const userService = new UserService();
 
+  SubscribeMessage(channel, service);
+
   app.post("/order", UserAuth, async (req: any, res: any, next: any) => {
     const { _id } = req.user;
     const { transactionId } = req.body;
@@ -30,7 +35,9 @@ module.exports = (app: any) => {
       // * Call event in customer/src/services/customer-service.ts
       const payload = await service.GetOrderPayload(_id, data, "CREATE_ORDER");
 
-      PublishCustomerEvent(payload);
+      // * PublishCustomerEvent(payload);
+      // * Replace by Message Broker Publisher:
+      PublishMessage(channel, CUSTOMER_BINDING_KEY, JSON.stringify(payload));
 
       return res.status(200).json(data);
     } catch (err) {
