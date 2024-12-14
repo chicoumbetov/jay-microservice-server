@@ -6,14 +6,15 @@ const {
   CUSTOMER_BINDING_KEY,
 } = require("../config");
 
-//*-------------------------------- Message Broker -------------------------------- */
-// TODO: create a channel
+//*----------- Message Broker ------------------- */
 module.exports.CreateChannel = async () => {
   try {
     const connection = await amqplib.connect(MESSAGE_BROKER_URL);
 
     const channel = await connection.createChannel();
-    console.log("channel :", channel);
+    if (channel) {
+      console.log("-----Customer Message Broker Channel Created-------");
+    }
 
     // * Exchange Distributor
     await channel.assertExchange(EXCHANGE_NAME, "direct", false);
@@ -24,18 +25,18 @@ module.exports.CreateChannel = async () => {
   }
 };
 
-// TODO: subscribe messages
 module.exports.SubscribeMessage = async (channel: any, service: any) => {
   try {
-    const appQueue = await channel.asserQueue(QUEUE_NAME);
-    channel.bindQueue(appQueue.queue, EXCHANGE_NAME, CUSTOMER_BINDING_KEY);
-    channel.consume(appQueue.queue, (data: any) => {
-      console.log("SubscribeMessage received data");
+    const appQueue = await channel?.assertQueue(QUEUE_NAME);
+    channel?.bindQueue(appQueue.queue, EXCHANGE_NAME, CUSTOMER_BINDING_KEY);
+    channel?.consume(appQueue.queue, (data: any) => {
+      console.log("---Customer MS SubscribeMessage received data---");
       console.log("data.content:", data.content.toString());
 
-      channel.ack(data);
+      channel?.ack(data);
     });
   } catch (error) {
-    throw new Error(`SubscribeMessage error of Message Broker ${error}`);
+    // throw new Error(
+    console.log(`SubscribeMessage error of Message Broker ${error}`);
   }
 };
