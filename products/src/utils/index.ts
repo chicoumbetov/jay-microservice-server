@@ -1,8 +1,16 @@
+import { Channel } from "amqplib";
+
 const axios = require("axios");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const amqplib = require("amqplib");
 
-const { APP_SECRET, GATEWAY_PORT } = require("../config");
+const {
+  APP_SECRET,
+  GATEWAY_PORT,
+  MESSAGE_BROKER_URL,
+  EXCHANGE_NAME,
+} = require("../config");
 
 //Utility functions
 export const GenerateSalt = async (): Promise<string> => {
@@ -57,7 +65,65 @@ export const FormateData = (data: any) => {
   }
 };
 
-// ! will be replaced by message broker
+//*-------------------------------- Message Broker -------------------------------- */
+module.exports.CreateChannel = async () => {
+  try {
+    const connection = await amqplib.connect(MESSAGE_BROKER_URL);
+
+    const channel = await connection.createChannel();
+
+    if (channel) {
+      console.log("------Products Message Broker Channel Created------");
+    }
+
+    // * Exchange Distributor
+    await channel.assertExchange(EXCHANGE_NAME, "direct", false);
+    return channel;
+  } catch (error) {
+    // throw new Error
+    console.log(`CreateChannel error of Message Broker ${error}`);
+  }
+};
+
+module.exports.PublishMessage = async (
+  channel: Channel,
+  binding_key: string,
+  message: string,
+  destination?: string // * Just info to put in console log
+) => {
+  try {
+    await channel.publish(EXCHANGE_NAME, binding_key, Buffer.from(message));
+    console.log(
+      `----Message has been sent from Products MS to ${destination} Service----`,
+      message
+    );
+  } catch (error) {
+    // throw new Error
+    console.log(`PublishMessage error of Message Broker ${error}`);
+  }
+};
+
+module.exports.SubscribeMessage = async (
+  channel: Channel,
+  service: any,
+  binding_key: string
+) => {
+  try {
+    const appQueue = await channel.assertQueue("QUEUE_NAME");
+    channel.bindQueue(appQueue.queue, EXCHANGE_NAME, binding_key);
+    channel.consume(appQueue.queue, (data: any) => {
+      console.log("SubscribeMessage received data");
+      console.log("data.content:", data.content.toString());
+
+      channel.ack(data);
+    });
+  } catch (error) {
+    throw new Error(`SubscribeMessage error of Message Broker ${error}`);
+  }
+};
+
+// * ---------- REPLACED by message broker above  ---------- * //
+/*
 export const PublishCustomerEvent = async (payload: any) => {
   try {
     axios.post(`http://localhost:${GATEWAY_PORT}/customer/app-events`, {
@@ -70,7 +136,6 @@ export const PublishCustomerEvent = async (payload: any) => {
 
 export const PublishShoppingEvent = async (payload: any) => {
   try {
-    // ! refactor process.env.GATEWAY_PORT using
     axios.post(`http://localhost:${GATEWAY_PORT}/shopping/app-events`, {
       payload,
     });
@@ -78,12 +143,4 @@ export const PublishShoppingEvent = async (payload: any) => {
     throw new Error("PublisherShoppingEvent error !");
   }
 };
-
-//*-------------------------------- Message Broker -------------------------------- */
-// TODO: create a channel
-module.exports.CreateChannel = async () => {};
-
-// TODO: publish messages
-module.exports.PublishMessage = async () => {};
-
-// TODO: subscribe messages
+*/

@@ -1,10 +1,15 @@
+import { Channel } from "amqplib";
 import { UserAuth } from "./middlewares/auth";
 const { ProductService } = require("../services/product-service");
 // * Déconnecter: import { CustomerService } from "../services/customer-service";
 // * Replace by Publisher Events
-const { PublishCustomerEvent, PublishShoppingEvent } = require("../utils");
+// * const { PublishCustomerEvent, PublishShoppingEvent } = require("../utils");
 
-module.exports = (app: any) => {
+// * PublishEvents above are replace also by PublishMessage of MESSAGE BROKER
+const { PublishMessage } = require("../utils");
+const { SHOPPING_BINDING_KEY, CUSTOMER_BINDING_KEY } = require("../config");
+
+module.exports = (app: any, channel: Channel) => {
   const service = new ProductService();
   // * Déconnecter: const customerService = new CustomerService();
 
@@ -76,14 +81,25 @@ module.exports = (app: any) => {
       // * should match to SubscribeEvents of
       // * customer/src/services/customer-service.ts
       // * in order to call AddToWishlist funciton
-      PublishCustomerEvent(data);
+
+      // * PublishCustomerEvent(data); Event Driven Updates
+      // * Message Broker publisher:
+      PublishMessage(
+        channel,
+        CUSTOMER_BINDING_KEY,
+        JSON.stringify(data),
+        "Customer"
+      );
+
       /* // * Replace by code above - 
       const product = await service.GetProductById(req.body._id);
       const wishList = await customerService.AddToWishlist(_id, product);
       return res.status(200).json(wishList);
       */
       return res.status(200).json(data.data.product);
-    } catch (err) {}
+    } catch (err) {
+      console.log("Wishlist api error :", err);
+    }
   });
 
   app.delete(
@@ -101,7 +117,16 @@ module.exports = (app: any) => {
           },
           "REMOVE_FROM_WISHLIST"
         );
-        PublishCustomerEvent(data);
+
+        // * PublishCustomerEvent(data);
+        // * Replace by PublishMessage of MESSAGE BROKER:
+        PublishMessage(
+          channel,
+          CUSTOMER_BINDING_KEY,
+          JSON.stringify(data),
+          "Customer"
+        );
+
         return res.status(200).json(data.data.product);
       } catch (err) {
         next(err);
@@ -123,8 +148,21 @@ module.exports = (app: any) => {
         "ADD_TO_CART"
       );
 
-      PublishCustomerEvent(data);
-      PublishShoppingEvent(data);
+      // PublishCustomerEvent(data);
+      // PublishShoppingEvent(data);
+      // * Replace by PublishMessage of MESSAGE BROKER:
+      PublishMessage(
+        channel,
+        CUSTOMER_BINDING_KEY,
+        JSON.stringify(data),
+        "Customer"
+      );
+      PublishMessage(
+        channel,
+        SHOPPING_BINDING_KEY,
+        JSON.stringify(data),
+        "Shopping"
+      );
       const result = {
         product: data.data.product,
         unit: data.data.qty,
@@ -156,8 +194,22 @@ module.exports = (app: any) => {
         "REMOVE_FROM_CART"
       );
 
-      PublishCustomerEvent(data);
-      PublishShoppingEvent(data);
+      // * PublishCustomerEvent(data);
+      // * PublishShoppingEvent(data);
+      // * Replace by PublishMessage of MESSAGE BROKER:
+      PublishMessage(
+        channel,
+        CUSTOMER_BINDING_KEY,
+        JSON.stringify(data),
+        "Customer"
+      );
+      PublishMessage(
+        channel,
+        SHOPPING_BINDING_KEY,
+        JSON.stringify(data),
+        "Shopping"
+      );
+
       const result = {
         product: data.data.product,
         unit: data.data.qty,

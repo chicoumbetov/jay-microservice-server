@@ -1,8 +1,12 @@
+import { Channel } from "amqplib";
 import { CustomerService } from "../services/customer-service";
 import { UserAuth } from "./middlewares/auth";
 
-module.exports = (app: any) => {
+const { SubscribeMessage } = require("../utils/message-broker");
+
+module.exports = (app: any, channel: Channel) => {
   const service = new CustomerService();
+  SubscribeMessage(channel, service);
 
   app.post("/signup", async (req: any, res: any, next: any) => {
     // /customer/signup

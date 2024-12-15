@@ -1,11 +1,9 @@
-import axios from "axios";
-
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const { APP_SECRET, GATEWAY_PORT } = require("../config");
+const { APP_SECRET } = require("../config");
 
-//Utility functions
+// * Utility functions
 export const GenerateSalt = async (): Promise<string> => {
   return await bcrypt.genSalt();
 };
@@ -58,6 +56,8 @@ export const FormateData = (data: any) => {
   }
 };
 
+// * ---------- REPLACED by message-broker.ts  ---------- * //
+/*
 export const PublishCustomerEvent = async (payload: any) => {
   try {
     console.log("PublishCustomerEvent called", payload);
@@ -68,3 +68,4 @@ export const PublishCustomerEvent = async (payload: any) => {
     throw new Error("PublisherCustomerEvent from shopping error !");
   }
 };
+*/
