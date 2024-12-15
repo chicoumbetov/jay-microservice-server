@@ -1,3 +1,5 @@
+# Commonads
+
 1. mkdir each folder
 2. npm init --y to create package.json
 3. npm i express cors dotenv && npm install nodemon -D
@@ -13,3 +15,12 @@ rm -rf ./products/node_modules ./customer/node_modules ./shopping/node_modules
 rm -rf ./products/opt ./customer/opt ./shopping/opt
 rm -rf ./products/package-lock.json ./customer/package-lock.json ./shopping/package-lock.json
 rm -rf ./products/app_error.log ./customer/app_error.log ./shopping/app_error.log
+
+## Deployment
+
+1. clean then zip 5 folders:
+   customers, products, shopping microservices
+   proxy and docker-compose.yml
+
+2. Upload file from:
+   jay-microservice-server/v1_aws_elastic_beanstalk.zip
