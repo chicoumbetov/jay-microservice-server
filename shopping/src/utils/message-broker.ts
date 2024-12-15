@@ -1,4 +1,5 @@
 import { Channel } from "amqplib";
+import { ShoppingService } from "../services/shopping-service";
 
 const amqplib = require("amqplib");
 
@@ -43,7 +44,10 @@ module.exports.PublishMessage = async (
   }
 };
 
-module.exports.SubscribeMessage = async (channel: Channel, service: any) => {
+module.exports.SubscribeMessage = async (
+  channel: Channel,
+  service: ShoppingService
+) => {
   try {
     if (channel) {
       const appQueue = await channel?.assertQueue(QUEUE_NAME);
@@ -51,6 +55,7 @@ module.exports.SubscribeMessage = async (channel: Channel, service: any) => {
       channel?.consume(appQueue.queue, (data: any) => {
         console.log("Shopping MS SubscribeMessage Received Data");
         console.log("data.content:", data.content.toString());
+        service.SubscribeEvents(data.content.toString());
 
         channel?.ack(data);
       });

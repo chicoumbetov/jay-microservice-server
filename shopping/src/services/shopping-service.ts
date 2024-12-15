@@ -78,8 +78,10 @@ class ShoppingService {
   }
 
   // * Take care of communication with other services
-  async SubscribeEvents(payload: any) {
-    const { event, data } = payload;
+  async SubscribeEvents(payload: string) {
+    const parsedPayload = JSON.parse(payload);
+
+    const { event, data } = parsedPayload;
 
     const { userId, product, qty } = data;
 
