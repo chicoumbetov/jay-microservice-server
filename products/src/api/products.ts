@@ -84,7 +84,12 @@ module.exports = (app: any, channel: Channel) => {
 
       // * PublishCustomerEvent(data); Event Driven Updates
       // * Message Broker publisher:
-      PublishMessage(channel, CUSTOMER_BINDING_KEY, JSON.stringify(data));
+      PublishMessage(
+        channel,
+        CUSTOMER_BINDING_KEY,
+        JSON.stringify(data),
+        "Customer"
+      );
 
       /* // * Replace by code above - 
       const product = await service.GetProductById(req.body._id);
@@ -192,8 +197,18 @@ module.exports = (app: any, channel: Channel) => {
       // * PublishCustomerEvent(data);
       // * PublishShoppingEvent(data);
       // * Replace by PublishMessage of MESSAGE BROKER:
-      PublishMessage(channel, CUSTOMER_BINDING_KEY, JSON.stringify(data));
-      PublishMessage(channel, SHOPPING_BINDING_KEY, JSON.stringify(data));
+      PublishMessage(
+        channel,
+        CUSTOMER_BINDING_KEY,
+        JSON.stringify(data),
+        "Customer"
+      );
+      PublishMessage(
+        channel,
+        SHOPPING_BINDING_KEY,
+        JSON.stringify(data),
+        "Shopping"
+      );
 
       const result = {
         product: data.data.product,
