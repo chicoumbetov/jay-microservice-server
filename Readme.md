@@ -12,3 +12,4 @@ docker-compose build --no-cache && docker-compose up
 rm -rf ./products/node_modules ./customer/node_modules ./shopping/node_modules
 rm -rf ./products/opt ./customer/opt ./shopping/opt
 rm -rf ./products/package-lock.json ./customer/package-lock.json ./shopping/package-lock.json
+rm -rf ./products/app_error.log ./customer/app_error.log ./shopping/app_error.log
