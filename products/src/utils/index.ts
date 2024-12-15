@@ -1,27 +1,22 @@
 import { Channel } from "amqplib";
 
-const axios = require("axios");
-const bcrypt = require("bcrypt");
+import bcryptjs from "bcryptjs";
+
 const jwt = require("jsonwebtoken");
 const amqplib = require("amqplib");
 
-const {
-  APP_SECRET,
-  GATEWAY_PORT,
-  MESSAGE_BROKER_URL,
-  EXCHANGE_NAME,
-} = require("../config");
+const { APP_SECRET, MESSAGE_BROKER_URL, EXCHANGE_NAME } = require("../config");
 
 //Utility functions
 export const GenerateSalt = async (): Promise<string> => {
-  return await bcrypt.genSalt();
+  return await bcryptjs.genSalt();
 };
 
 export const GeneratePassword = async (
   password: string,
   salt: string
 ): Promise<string> => {
-  return await bcrypt.hash(password, salt);
+  return await bcryptjs.hash(password, salt);
 };
 
 export const ValidatePassword = async (

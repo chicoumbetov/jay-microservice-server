@@ -44,7 +44,7 @@ const ErrorHandler = async (
 ) => {
   const errorLogger = new ErrorLogger();
 
-  process.on("uncaughtException", (reason, promise) => {
+  process.on("uncaughtException", (reason: any, promise: any) => {
     console.log(reason, "UNHANDLED");
     throw reason; // need to take care
   });
@@ -56,7 +56,7 @@ const ErrorHandler = async (
     }
   });
 
-  process.on("unhandledRejection", (reason, promise) => {
+  process.on("unhandledRejection", (reason: any, promise: any) => {
     console.log("Unhandled Rejection at:", promise, "reason:", reason);
     errorLogger.logError(reason);
   });
